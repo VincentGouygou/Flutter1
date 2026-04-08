@@ -5,7 +5,7 @@ une app a la facebook en mini :
  	- crud account
  	- 
 
-une app avec 
+une app avec
 	- une liste de langues ayant chacune sont vocabulaire
 	- une bandeau de pub au milieu qui disparait au clic ( BannerAd... )
 	- une invite ( modal ?) rgpdCookies + 
