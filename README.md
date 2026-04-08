@@ -6,7 +6,7 @@ une app a la facebook en mini :
  	- 
 
 une app avec
-	- une liste de langues ayant chacune sont vocabulaire
+	- une liste de langues ayant chacune son vocabulaire
 	- une bandeau de pub au milieu qui disparait au clic ( BannerAd... )
 	- une invite ( modal ?) rgpdCookies + 
 	- un test cookies pour savoir si l'user est déjà connecté. 
