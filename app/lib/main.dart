@@ -1,5 +1,6 @@
  
 import 'package:flutter/material.dart';
+import 'dart:async'; // <--- Permet d'utiliser le Timer
 //import 'package:menu_bar/menu_bar.dart';
 void main() {
   runApp(const MyApp());
@@ -32,9 +33,21 @@ class App1 extends StatefulWidget {
 }
 
 class _App1State extends State<App1> {
-   final bool _isConnected = true;
-   final String _name="Vincent";
+     bool _isConnected = false;
+     String _name="Vincent";
+     String _now = DateTime.now().toString().substring(11, 19);
     
+  @override
+  void initState() {
+    super.initState();
+    // 2. On lance un timer qui se répète toutes les secondes
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        // 3. On met à jour l'heure et on dit à Flutter de "redessiner"
+        _now = DateTime.now().toString().substring(11, 19);
+      });
+    });
+  }
   void _functionA() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -42,7 +55,8 @@ class _App1State extends State<App1> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      
+      _isConnected = _isConnected ? false : true;
+       
     });
   }
 
@@ -69,16 +83,14 @@ class _App1State extends State<App1> {
           leadingWidth: 100,
           leading: Center(
               child: ElevatedButton(
-                onPressed: () {
-
-                }, 
+                onPressed: _functionA, 
                 
-                child: _isConnected ? Text('$_name') : Text('Login' ) ,
+                child: _isConnected ? Text(_name) : Text('Login' ) ,
              
               ) 
             ),
           actions: <Widget> [
-            TextButton(onPressed: _App1State.new, child: const Text('sfds') ),
+            Text(' $_now '),
             TextButton(onPressed: _App1State.new, child: const Text('fdfffg'))
           ],
         ),
@@ -112,12 +124,7 @@ class _App1State extends State<App1> {
       bottomNavigationBar: BottomAppBar(
         child: const Text("data"),
       ),
-      //ElevatedButton(onPressed: onPressed, child: child),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _functionA,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      
     );
   }
 }
