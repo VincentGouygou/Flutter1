@@ -39,7 +39,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
 
     try {
       final client = http.Client();    
-      log('zzzz');
+      
      // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
       final url = Uri.https('devince.fr', '/api/user.php', {
         'email': _emailController.text,
@@ -73,7 +73,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
       }
     } catch (e) {
       // erreur de connexion
-      log( ' sdfqsd ' + e.toString());
+      log(e.toString());
     }
   }
   @override
