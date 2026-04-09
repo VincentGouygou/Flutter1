@@ -2,7 +2,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async'; // <--- Permet d'utiliser le Timer
 //import 'package:menu_bar/menu_bar.dart';
-void main() {
+import 'package:app/connexion_page.dart';
+import 'package:app/home_page.dart';
+import 'package:app/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var prefs = await SharedPreferences.getInstance();
+  isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
+  log("isLoggedIn: $isLoggedIn");
+
   runApp(const MyApp());
 }
 
@@ -19,6 +29,10 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: const Color.fromARGB(255, 60, 202, 24)),
       ),
       home:  const App1(title: 'Flutter App 1 '),
+      routes: {
+        "/home": (context) => const HomePage(),
+        "/connexion": (context) => const ConnexionPage(),
+      },
     );
   }
 }
