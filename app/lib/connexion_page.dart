@@ -18,6 +18,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
   bool _result = false;
+  String _name = "";
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -49,32 +50,25 @@ class _ConnexionPageState extends State<ConnexionPage> {
           'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
           'Accept': 'application/json',
         },);
-     log( response.statusCode.toString());
-     log(response.body);
+   
      final Map<String, dynamic> data = jsonDecode(response.body);
   // On décode le JSON peu importe le statut pour voir
         // ce que le serveur dit
-      if (response.body.isNotEmpty) {  
-        
-        log('sqdqds ' );
-      } else { log('empty body');}
-// log('Resultat: ${data['error']}');
-      // si connexion ok, alors on bascule sur une autre page
+   
+       // si connexion ok, alors on bascule sur une autre page
       if (response.statusCode == 200) {
         setState(() {
           _result = data['result']; // On récupère le champ 'result',
-        
+           _name = data['name'];
         });
         if (_result){
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool("isLoggedIn", true);
+          await prefs.setString("userName", _name); // On enregistre le nom ici
           isLoggedIn = true;
           Navigator.pushReplacementNamed(context, "/home");
         }
-        /*
-        // on demande les infos de l'utilisateur
-        Uri url = Uri.parse("http://192.168.1.10/api/user");
-        response = await http.get(url, headers: headers);
-        log(response.body);
-          */
+        
         
       }
     } catch (e) {

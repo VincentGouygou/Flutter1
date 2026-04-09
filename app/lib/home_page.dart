@@ -14,7 +14,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String str_welcome = "Bienvenue !";
-
+  String _displayName = "";
+  @override 
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+  void _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _displayName = prefs.getString("userName") ?? "Utilisateur";
+    });
+  }
   void _logout() async {
     log("logout");
     // Effacer les données de connexion
@@ -56,7 +67,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(str_welcome)),
+      appBar: AppBar(title: Center( 
+        child: Text('$str_welcome  $_displayName')),
+      ),
       body: Center(
         child: Column(
           children: [
