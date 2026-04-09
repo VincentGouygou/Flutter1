@@ -17,7 +17,7 @@ class ConnexionPage extends StatefulWidget {
 class _ConnexionPageState extends State<ConnexionPage> {
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
-
+  bool _result = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -37,52 +37,49 @@ class _ConnexionPageState extends State<ConnexionPage> {
     log(_passwordController.text);
 
     try {
-      // connexion au serveur Laravel,
-      Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
-      var response = await http.post(
-        url,
-        body: {
-          "email": _emailController.text,
-          "password": _passwordController.text,
-        },
-      );
-
+      final client = http.Client();    
+      log('zzzz');
+     // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
+      final url = Uri.https('devince.fr', '/api/user.php', {
+        'email': _emailController.text,
+        'pwd': _passwordController.text,
+      });
+      var response = await http.get( url,
+      headers: {
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+          'Accept': 'application/json',
+        },);
+     log( response.statusCode.toString());
+     log(response.body);
+     final Map<String, dynamic> data = jsonDecode(response.body);
+  // On décode le JSON peu importe le statut pour voir
+        // ce que le serveur dit
+      if (response.body.isNotEmpty) {  
+        
+        log('sqdqds ' );
+      } else { log('empty body');}
+// log('Resultat: ${data['error']}');
       // si connexion ok, alors on bascule sur une autre page
       if (response.statusCode == 200) {
-        // on récupère le token
-        var bodyjson = jsonDecode(response.body);
-        var token = bodyjson["access_token"];
-        var token_type = bodyjson["token_type"];
-
-        final prefs = await SharedPreferences.getInstance();
-        isLoggedIn = true;
-        if (_rememberMe) {
-          // on sauvegarde le token et le type de token dans les SharedPreferences
-          prefs.setBool("isLoggedIn", true);
-          prefs.setString("access_token", token);
-          prefs.setString("token_type", token_type);
-        } else {
-          // on supprime le token et le type de token des SharedPreferences
-          prefs.remove("isLoggedIn");
-          prefs.remove("access_token");
-          prefs.remove("token_type");
+        setState(() {
+          _result = data['result']; // On récupère le champ 'result',
+        
+        });
+        if (_result){
+          isLoggedIn = true;
+          Navigator.pushReplacementNamed(context, "/home");
         }
-
-        var headers = {
-          "Authorization": "$token_type $token",
-          "Accept": "application/json",
-        };
-
+        /*
         // on demande les infos de l'utilisateur
         Uri url = Uri.parse("http://192.168.1.10/api/user");
         response = await http.get(url, headers: headers);
         log(response.body);
-
-        Navigator.pushReplacementNamed(context, "/home");
+          */
+        
       }
     } catch (e) {
       // erreur de connexion
-      log(e.toString());
+      log( ' sdfqsd ' + e.toString());
     }
   }
   @override
