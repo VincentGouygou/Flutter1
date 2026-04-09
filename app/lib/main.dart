@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         
         colorScheme: .fromSeed(seedColor: const Color.fromARGB(255, 60, 202, 24)),
       ),
-      home:  const App1(title: 'Flutter App 1 '),
+      home:   isLoggedIn ? HomePage() : ConnexionPage(),  // const App1(title: 'Flutter App 1 '),
       routes: {
         "/home": (context) => const HomePage(),
         "/connexion": (context) => const ConnexionPage(),
