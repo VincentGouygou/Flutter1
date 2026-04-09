@@ -1,0 +1,106 @@
+----------- Passage de parametres d'une route a une autre -----------
+
+Vous avez dit
+
+bonjour, pourrais tu m'expliquer, apres avoir analyser les fichiers 
+joints, comment faire passer la variable _name (et sa value) 
+de connexion_page.dart à home_page.dart ?
+
+
+
+Gemini a dit
+
+Bonjour ! C'est une excellente question. Dans ton code actuel, tu récupères bien le nom (_name = data['name']) lors de la connexion, mais cette information reste "prisonnière" de l'état de ConnexionPage.
+
+Pour passer cette variable à HomePage, il existe plusieurs approches en Flutter. Voici les deux méthodes les plus adaptées à ton architecture actuelle :
+Méthode 1 : Passer la variable via le constructeur (Le plus simple)
+
+    C'est la méthode directe : tu modifies HomePage pour qu'elle accepte un paramètre name dans son constructeur.
+    1. Modifier home_page.dart
+
+    Ajoute une variable finale userName et mets à jour le constructeur :
+    Dart
+
+    class HomePage extends StatefulWidget {
+    final String userName; // On ajoute la variable ici
+    const HomePage({super.key, required this.userName}); // On l'exige dans le constructeur
+
+    @override
+    State<HomePage> createState() => _HomePageState();
+    }
+
+    class _HomePageState extends State<HomePage> {
+    // Dans le build, on accède à la variable via widget.userName
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+        appBar: AppBar(title: Center(child: Text("Bienvenue ${widget.userName}"))),
+        body: Center(
+            child: Column(
+            children: [
+                Text("Content de vous revoir, ${widget.userName} !"),
+                // ... reste du code
+            ],
+            ),
+        ),
+        );
+    }
+    }
+
+    2. Modifier l'appel dans connexion_page.dart
+
+    Au lieu d'utiliser une route nommée (qui est plus complexe pour passer des arguments), utilise MaterialPageRoute :
+    Dart
+
+    if (_result) {
+    isLoggedIn = true;
+    // On passe explicitement le nom au constructeur de HomePage
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+        builder: (context) => HomePage(userName: _name),
+        ),
+    );
+    }
+
+Méthode 2 : Utiliser SharedPreferences (Le plus persistant)
+
+    Puisque tu utilises déjà SharedPreferences dans ton fichier main.dart pour isLoggedIn, il est logique d'y stocker aussi le nom. Cela permettra au nom de rester affiché même si l'utilisateur ferme et rouvre l'application.
+    1. Dans connexion_page.dart (sauvegarde)
+
+    Modifie ta fonction validateForm pour enregistrer le nom :
+    Dart
+
+    if (_result) {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("isLoggedIn", true);
+    await prefs.setString("userName", _name); // On enregistre le nom ici
+    
+    isLoggedIn = true;
+    Navigator.pushReplacementNamed(context, "/home");
+    }
+
+    2. Dans home_page.dart (récupération)
+
+    Tu récupères le nom dans le initState de ta page d'accueil :
+    Dart
+
+    class _HomePageState extends State<HomePage> {
+    String _displayName = "";
+
+    @override
+    void initState() {
+        super.initState();
+        _loadUserName();
+    }
+
+    void _loadUserName() async {
+        final prefs = await SharedPreferences.getInstance();
+        setState(() {
+        _displayName = prefs.getString("userName") ?? "Utilisateur";
+        });
+    }
+    
+    // Utilise ensuite _displayName dans ton widget build
+    }
+
