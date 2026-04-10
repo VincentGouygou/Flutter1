@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async'; // <--- Permet d'utiliser le Timer
+//import 'dart:async'; // <--- Permet d'utiliser le Timer
 //import 'package:menu_bar/menu_bar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -35,7 +35,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
     log(_passwordController.text);
 
     try {
-      final client = http.Client();    // ?? obsolete ??
+    //  final client = http.Client();    // ?? obsolete ??
       
      // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
       final url = Uri.https('devince.fr', '/api/user.php', {
@@ -47,9 +47,10 @@ class _ConnexionPageState extends State<ConnexionPage> {
           'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
           'Accept': 'application/json',
         },);
-   
-     final Map<String, dynamic> data = jsonDecode(response.body);
-  // On décode le JSON peu importe le statut pour voir
+      log( response.statusCode.toString());
+      log(response.body);
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      // On décode le JSON peu importe le statut pour voir
         // ce que le serveur dit
    
        // si connexion ok, alors on bascule sur une autre page
@@ -87,7 +88,9 @@ class _ConnexionPageState extends State<ConnexionPage> {
       }
     } catch (e) {
       // erreur de connexion
-      log(e.toString());
+      log( " errorserver : $e.toString()" );
+      log( " errorserver : $e $e.toString()   qslkdjdfklj " );
+      
     }
   }
   @override
