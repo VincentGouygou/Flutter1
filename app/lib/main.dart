@@ -47,9 +47,9 @@ class App1 extends StatefulWidget {
 }
 
 class _App1State extends State<App1> {
-     bool _isConnected = false;
-     String _name="Vincent";
-     String _now = DateTime.now().toString().substring(11, 19);
+  bool _isConnected = false;
+  String _name      = "Vincent";
+  String _now       = DateTime.now().toString().substring(11, 19);
     
   @override
   void initState() {
@@ -64,11 +64,7 @@ class _App1State extends State<App1> {
   }
   void _functionA() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
+      
       _isConnected = _isConnected ? false : true;
        
     });

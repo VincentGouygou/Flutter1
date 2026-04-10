@@ -9,18 +9,15 @@ import 'dart:developer';
 
 class ConnexionPage extends StatefulWidget {
   const ConnexionPage({super.key});
-
   @override
   State<ConnexionPage> createState() => _ConnexionPageState();
 }
-
 class _ConnexionPageState extends State<ConnexionPage> {
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
   bool _result = false;
   String _name = "";
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   @override
@@ -63,8 +60,24 @@ class _ConnexionPageState extends State<ConnexionPage> {
         });
         if (_result){
           final prefs = await SharedPreferences.getInstance();
+          // on récupère le token
+          var bodyjson = jsonDecode(response.body);
+          var token = bodyjson["access_token"];
+          var token_type = bodyjson["token_type"];
+          if (_rememberMe) {
+            // on sauvegarde le token et le type de token dans les SharedPreferences
+            prefs.setBool("isLoggedIn", true);
+            prefs.setString("access_token", token);
+            prefs.setString("token_type", token_type);
+          } else {
+            // on supprime le token et le type de token des SharedPreferences
+            prefs.remove("isLoggedIn");
+            prefs.remove("access_token");
+            prefs.remove("token_type");
+          }
+
           await prefs.setBool("isLoggedIn", true);
-          await prefs.setString("userName", _name); // On enregistre le nom ici
+          await prefs.setString("userName", _name);  
           isLoggedIn = true;
           Navigator.pushReplacementNamed(context, "/home");
         }

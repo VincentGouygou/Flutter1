@@ -1,6 +1,6 @@
-// sdfdsf
 import 'dart:developer';
-
+import 'package:app/constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String str_welcome = "Bienvenue !";
+  String strWelcome = "Bienvenue !";
   String _displayName = "";
   @override 
   void initState() {
@@ -30,20 +30,21 @@ class _HomePageState extends State<HomePage> {
     log("logout");
     // Effacer les données de connexion
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove("isLoggedIn");
+    await prefs.setBool("isLoggedIn",false);
     String token = prefs.getString("access_token") ?? "";
     String token_type = prefs.getString("token_type") ?? "";
 
-    if (token == "") {
+    if (!isLoggedIn) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vous n\'êtes pas connecté')),
       );
       return;
     }
 
-    var headers = {"Authorization": "$token_type $token"};
+    var headers = {"Authorization": "$token_type $token",
+                   "action": "logoutReq"};
 
-    Uri url = Uri.parse("http://192.168.1.10/api/logout");
+    Uri url = Uri.parse("http://devince.fr/api/users.php ");
 
     var response = await http.post(url, headers: headers);
 
@@ -54,8 +55,9 @@ class _HomePageState extends State<HomePage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Vous êtes déconnecté')));
-      await prefs.remove("access_token");
+      await prefs.setBool("isLoggedIn", false);
       await prefs.remove("token_type");
+      await prefs.remove("access_token");
       Navigator.pushReplacementNamed(context, "/connexion");
     } else {
       ScaffoldMessenger.of(
@@ -68,12 +70,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Center( 
-        child: Text('$str_welcome  $_displayName')),
+        child: Text('$strWelcome  $_displayName')),
       ),
       body: Center(
         child: Column(
           children: [
-            Text(str_welcome),
+            Text(strWelcome),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _logout,
