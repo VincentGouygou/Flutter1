@@ -35,7 +35,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
     log(_passwordController.text);
 
     try {
-      final client = http.Client();    
+      final client = http.Client();    // ?? obsolete ??
       
      // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
       final url = Uri.https('devince.fr', '/api/user.php', {
@@ -56,27 +56,28 @@ class _ConnexionPageState extends State<ConnexionPage> {
       if (response.statusCode == 200) {
         setState(() {
           _result = data['result']; // On récupère le champ 'result',
-           _name = data['name'];
+          _name = data['name'];
+
         });
         if (_result){
           final prefs = await SharedPreferences.getInstance();
           // on récupère le token
           var bodyjson = jsonDecode(response.body);
           var token = bodyjson["access_token"];
-          var token_type = bodyjson["token_type"];
+         // var token_type = bodyjson["token_type"]; ?? obsolete ??
           if (_rememberMe) {
             // on sauvegarde le token et le type de token dans les SharedPreferences
             prefs.setBool("isLoggedIn", true);
             prefs.setString("access_token", token);
-            prefs.setString("token_type", token_type);
+          //  prefs.setString("token_type", token_type); ?? obsolete ??
           } else {
             // on supprime le token et le type de token des SharedPreferences
             prefs.remove("isLoggedIn");
             prefs.remove("access_token");
-            prefs.remove("token_type");
+          //  prefs.remove("token_type"); ?? obsolete ??
           }
 
-          await prefs.setBool("isLoggedIn", true);
+          
           await prefs.setString("userName", _name);  
           isLoggedIn = true;
           Navigator.pushReplacementNamed(context, "/home");

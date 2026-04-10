@@ -10,6 +10,7 @@ import 'dart:developer';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var prefs = await SharedPreferences.getInstance();
+  userLang = prefs.getString("userLang") ?? "en";
   isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
   log("isLoggedIn: $isLoggedIn");
 

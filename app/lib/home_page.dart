@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isLoggedIn",false);
     String token = prefs.getString("access_token") ?? "";
-    String token_type = prefs.getString("token_type") ?? "";
+   // String token_type = prefs.getString("token_type") ?? ""; ?? obsolete ??
 
     if (!isLoggedIn) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -41,8 +41,8 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    var headers = {"Authorization": "$token_type $token",
-                   "action": "logoutReq"};
+    var headers = {"Authorization": token, // $token_type  ?? obsolete ??
+                   "action": "logOut"};
 
     Uri url = Uri.parse("http://devince.fr/api/users.php ");
 
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
         context,
       ).showSnackBar(const SnackBar(content: Text('Vous êtes déconnecté')));
       await prefs.setBool("isLoggedIn", false);
-      await prefs.remove("token_type");
+     // await prefs.remove("token_type"); ?? obsolete ??
       await prefs.remove("access_token");
       Navigator.pushReplacementNamed(context, "/connexion");
     } else {
