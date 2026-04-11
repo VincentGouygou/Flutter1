@@ -74,7 +74,8 @@ class _ConnexionPageState extends State<ConnexionPage> {
           //  prefs.setString("token_type", token_type); ?? obsolete ??
           } else {
             // on supprime le token et le type de token des SharedPreferences
-            prefs.remove("isLoggedIn");
+           // prefs.remove("isLoggedIn");
+           prefs.setBool("isLoggedIn", true);
             prefs.remove("access_token");
           //  prefs.remove("token_type"); ?? obsolete ??
           }

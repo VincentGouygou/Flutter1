@@ -11,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var prefs = await SharedPreferences.getInstance();
   userLang = prefs.getString("userLang") ?? "en";
+  prefs.setBool("isLoggedIn", false);
   isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
   log("isLoggedIn: $isLoggedIn");
 
