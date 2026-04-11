@@ -1,0 +1,219 @@
+import 'package:flutter/material.dart';
+//import 'dart:async'; // <--- Permet d'utiliser le Timer
+//import 'package:menu_bar/menu_bar.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:app/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
+
+
+
+
+
+class InscriptionPage extends StatefulWidget {
+  const InscriptionPage({super.key});
+
+  @override
+  State<InscriptionPage> createState() => _InscriptionPageState();
+}
+
+class _InscriptionPageState extends State<InscriptionPage> { 
+   bool _isPasswordVisible = false;
+ // bool _rememberMe = false;
+  bool _result = false;
+  String _name = "";
+   String _token = "";
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    if (devmode) {
+      _emailController.text = "khaap2v4e@mozmail.com";
+      _passwordController.text = "alicia46!";
+    }
+  }
+  
+  void validateForm() async {
+    // récupère les valeurs des champs de texte
+    log(_emailController.text);
+    log(_passwordController.text);
+
+    try {
+    //  final client = http.Client();    // ?? obsolete ??
+      
+     // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
+      final url = Uri.https('devince.fr', '/api/user.php'); 
+      var response = await http.post( url,
+      headers: {
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+          'Accept': 'application/json',
+        },
+      body: {   'action': 'loginIn',
+                'email': _emailController.text,
+                'pwd': _passwordController.text,},  
+      );
+      log("kljklj "+ response.statusCode.toString());
+      log( "llllllll" +response.body.toString());
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      // On décode le JSON peu importe le statut pour voir
+        // ce que le serveur dit
+   
+       // si connexion ok, alors on bascule sur une autre page
+      if (response.statusCode == 200) {
+        setState(() {
+          _result = data['result']; // On récupère le champ 'result',
+          _name = data['name'];
+          _token = data['access_token'];
+        });
+        if (_result){
+          final prefs = await SharedPreferences.getInstance();
+          // on récupère le token
+           
+           
+         // var token_type = bodyjson["token_type"]; ?? obsolete ??
+          if (1==1) {
+            // on sauvegarde le token et le type de token dans les SharedPreferences
+            prefs.setBool("isLoggedIn", true);
+            prefs.setString("access_token", _token);
+          //  prefs.setString("token_type", token_type); ?? obsolete ??
+          } else {
+            // on supprime le token et le type de token des SharedPreferences
+           // prefs.remove("isLoggedIn");
+           prefs.setBool("isLoggedIn", true);
+            prefs.remove("access_token");
+          //  prefs.remove("token_type"); ?? obsolete ??
+          }
+
+          
+          await prefs.setString("userName", _name);  
+           
+          Navigator.pushReplacementNamed(context, "/home");
+        }
+        
+        
+      }
+    } catch (e) {
+      // erreur de connexion
+      log( " errorserver : " +e.toString());
+      log( " errorserver : $e" +e.toString() + "   " );
+      
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Center( 
+          child:    const Text("Inscription"),
+        ),
+      ),
+      body: Center( 
+        child: 
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+
+                  Text(str_welcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text(str_enter_email_and_password),
+                  TextFormField(
+                      controller: _emailController,
+                      validator: (value) {
+                        // add email validation
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+
+                        bool emailValid = RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                        ).hasMatch(value);
+                        if (!emailValid) {
+                          return 'Please enter a valid email';
+                        }
+
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        prefixIcon: Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    _gap(),
+                    TextFormField(
+                      controller: _passwordController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                      obscureText: !_isPasswordVisible,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        prefixIcon: const Icon(Icons.lock_outline_rounded),
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    _gap(),
+                    
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            'Sign in',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            validateForm();
+                          }
+                        },
+                      ),
+                    ),
+                  // Ajoute tes TextFormField ici pour l'email et le mot de passe
+                ],
+              ),
+            ),
+          ),
+    ),
+    );
+  }
+  Widget _gap() => const SizedBox(height: 16);
+}

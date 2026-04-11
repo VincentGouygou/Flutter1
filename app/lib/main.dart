@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async'; // <--- Permet d'utiliser le Timer
 //import 'package:menu_bar/menu_bar.dart';
+import 'package:app/inscription_page.dart';
 import 'package:app/connexion_page.dart';
 import 'package:app/home_page.dart';
 import 'package:app/constants.dart';
@@ -11,7 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var prefs = await SharedPreferences.getInstance();
   userLang = prefs.getString("userLang") ?? "en";
-  prefs.setBool("isLoggedIn", false);
+ // prefs.setBool("isLoggedIn", false);
   isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
   log("isLoggedIn: $isLoggedIn");
 
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/home": (context) => const HomePage(),
         "/connexion": (context) => const ConnexionPage(),
+        "/inscription": (context) => const InscriptionPage(),
       },
     );
   }

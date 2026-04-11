@@ -45,8 +45,9 @@ class _ConnexionPageState extends State<ConnexionPage> {
           'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
           'Accept': 'application/json',
         },
-      body: {  'email': _emailController.text,
-               'pwd': _passwordController.text,},  
+      body: {   'action': 'loginIn',
+                'email': _emailController.text,
+                'pwd': _passwordController.text,},  
       );
       log("kljklj "+ response.statusCode.toString());
       log( "llllllll" +response.body.toString());
@@ -90,10 +91,13 @@ class _ConnexionPageState extends State<ConnexionPage> {
       }
     } catch (e) {
       // erreur de connexion
-      log( " errorserver : " +e.toString());
-      log( " errorserver : $e" +e.toString() + "   " );
+      log( " errorserver : $e.toString()");
+       
       
     }
+  }
+  void goSubscribe()  {
+    Navigator.pushReplacementNamed(context, "/inscription");
   }
   @override
   Widget build(BuildContext context) {
@@ -115,103 +119,125 @@ class _ConnexionPageState extends State<ConnexionPage> {
                   Text(str_welcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   Text(str_enter_email_and_password),
                   TextFormField(
-                      controller: _emailController,
-                      validator: (value) {
-                        // add email validation
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
+                    controller: _emailController,
+                    validator: (value) {
+                      // add email validation
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
 
-                        bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                        ).hasMatch(value);
-                        if (!emailValid) {
-                          return 'Please enter a valid email';
-                        }
+                      bool emailValid = RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                      ).hasMatch(value);
+                      if (!emailValid) {
+                        return 'Please enter a valid email';
+                      }
 
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Enter your email',
-                        prefixIcon: Icon(Icons.email_outlined),
-                        border: OutlineInputBorder(),
-                      ),
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'Enter your email',
+                      prefixIcon: Icon(Icons.email_outlined),
+                      border: OutlineInputBorder(),
                     ),
-                    _gap(),
-                    TextFormField(
-                      controller: _passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
+                  ),
+                  _gap(),
+                  TextFormField(
+                    controller: _passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
 
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                      obscureText: !_isPasswordVisible,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
-                        prefixIcon: const Icon(Icons.lock_outline_rounded),
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    _gap(),
-                    CheckboxListTile(
-                      value: _rememberMe,
-                      onChanged: (value) {
-                        if (value == null) return;
-                        setState(() {
-                          _rememberMe = value;
-                        });
-                      },
-                      title: const Text('Remember me'),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      dense: true,
-                      contentPadding: const EdgeInsets.all(0),
-                    ),
-                    _gap(),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Text(
-                            'Sign in',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+                    obscureText: !_isPasswordVisible,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      prefixIcon: const Icon(Icons.lock_outline_rounded),
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                         onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            validateForm();
-                          }
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
                         },
                       ),
                     ),
-                  // Ajoute tes TextFormField ici pour l'email et le mot de passe
+                  ),
+                  _gap(),
+                  CheckboxListTile(
+                    value: _rememberMe,
+                    onChanged: (value) {
+                      if (value == null) return;
+                      setState(() {
+                        _rememberMe = value;
+                      });
+                    },
+                    title: const Text('Remember me'),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    dense: true,
+                    contentPadding: const EdgeInsets.all(0),
+                  ),
+                  _gap(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          validateForm();
+                        }
+                      },
+                    ),
+                  ),
+                  
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      onPressed: goSubscribe,
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          'Subscribe ?',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      
+                    ),
+                  ),
                 ],
               ),
             ),
