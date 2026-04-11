@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     log("logout");
     // Effacer les données de connexion
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("isLoggedIn",false);
+    isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
     String token = prefs.getString("access_token") ?? "";
     
    // String token_type = prefs.getString("token_type") ?? ""; ?? obsolete ??
@@ -42,18 +42,24 @@ class _HomePageState extends State<HomePage> {
       );
       return;
     }
+ 
+    
+        
+    final url = Uri.https('devince.fr', '/api/user.php'); 
 
-    var headers = {"Authorization": token, // $token_type  ?? obsolete ??
-                   "action": "logOut"};
-
-    Uri url = Uri.parse("https://devince.fr/api/users.php ");
-
-    var response = await http.post(url, headers: headers);  
+    var response = await http.post(url, 
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+        'Accept': 'application/json',
+      },
+      body: {  'Authorization': token,
+               'action': "logOut",},  
+    );  //
 
     log(response.statusCode.toString());
     
   
-     // log(response.body);
+      log("kkkkkkkkkkk" +response.body);
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(
@@ -65,11 +71,12 @@ class _HomePageState extends State<HomePage> {
       Navigator.pushReplacementNamed(context, "/connexion");
     } 
     if (response.statusCode == 404) {
-       final Map<String, dynamic> data = jsonDecode(response.body);
-      tokenErrorMsg = data['tokenErrorMsg']; 
+      //final Map<String, dynamic> data = jsonDecode(response.body);
+      //tokenErrorMsg = data['tokenErrorMsg']; 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(  SnackBar(content: Text('Erreur de déconnexion : $tokenErrorMsg'  )));
+      ).showSnackBar(  
+        SnackBar(content: Text('Erreur de déconnexion    '  )));
     }
   }
 
