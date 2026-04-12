@@ -83,9 +83,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(title: Center( 
         child: Text('$strWelcome  $_displayName')),
       ),
+      
       body: Center(
         child: Column(
           children: [

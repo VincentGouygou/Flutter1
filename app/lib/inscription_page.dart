@@ -33,8 +33,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
     super.initState();
 
     if (devmode) {
-      _emailController.text = "khaap2v4e@mozmail.com";
+      _emailController.text = "vincent.gouygou@gmx.fr";
       _passwordController.text = "alicia46!";
+      _nameController.text = 'VincentG';
     }
   }
   
@@ -53,9 +54,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
           'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
           'Accept': 'application/json',
         },
-      body: {   'action': 'loginIn',
+      body: {   'action': 'subscribe',
                 'email': _emailController.text,
-                'pwd': _passwordController.text,},  
+                'pwd': _passwordController.text, 
+                'name': _nameController.text, },
       );
       log("kljklj "+ response.statusCode.toString());
       log( "llllllll" +response.body.toString());
@@ -99,8 +101,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
       }
     } catch (e) {
       // erreur de connexion
-      log( " errorserver : " +e.toString());
-      log( " errorserver : $e" +e.toString() + "   " );
+      
+      log( " errorserver : "+ e.toString()   );
       
     }
   }
@@ -192,7 +194,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                         return 'Please enter some text';
                       }
  
-                      return null;
+                      return value;
                     },
                     decoration: const InputDecoration(
                       labelText: 'Name',
