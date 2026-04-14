@@ -13,7 +13,7 @@ class InscriptionPage extends StatefulWidget {
   State<InscriptionPage> createState() => _InscriptionPageState();
 }
 
-class _InscriptionPageState extends State<InscriptionPage> { 
+class _InscriptionPageState extends State<InscriptionPage> {
   bool _isPasswordVisible = false;
   // bool _rememberMe = false;
   bool _result = false;
@@ -32,35 +32,27 @@ class _InscriptionPageState extends State<InscriptionPage> {
       _passwordController.text = "alicia46!";
       _nameController.text = 'VincentG';
     }
-  }
-  
+  }  
   void validateForm() async {
-    // récupère les valeurs des champs de texte
-    log(_emailController.text);
-    log(_passwordController.text);
-
+          
     try {
       //  final client = http.Client();    // ?? obsolete ??
       
       // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
       final url = Uri.https('devince.fr', '/api/user.php'); 
-      var response = await http.post( url,
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
-            'Accept': 'application/json',
-          },
-        body: {   'action': 'subscribe',
+      var response = await http.post( url, headers: {
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+          'Accept': 'application/json',
+        },body: {   'action': 'subscribe',
                   'email': _emailController.text,
                   'pwd': _passwordController.text, 
-                  'name': _nameController.text, },
-      );
-      log("kljklj "+ response.statusCode.toString());
-      log( "llllllll" +response.body.toString());
+                  'name': _nameController.text, }, );
+  
       final Map<String, dynamic> data = jsonDecode(response.body);
       // On décode le JSON peu importe le statut pour voir
         // ce que le serveur dit
-   
-       // si connexion ok, alors on bascule sur une autre page
+  
+      // si connexion ok, alors on bascule sur une autre page
       if (response.statusCode == 200) {
         setState(() {
           _result = data['result']; // On récupère le champ 'result',
@@ -70,7 +62,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
         if (_result){
           final prefs = await SharedPreferences.getInstance();
           // on récupère le token           
-         // var token_type = bodyjson["token_type"]; ?? obsolete ??
+        // var token_type = bodyjson["token_type"]; ?? obsolete ??
           if (1==1) {
             // on sauvegarde le token et le type de token dans les SharedPreferences
             prefs.setBool("isLoggedIn", true);
@@ -78,8 +70,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
           //  prefs.setString("token_type", token_type); ?? obsolete ??
           } else {
             // on supprime le token et le type de token des SharedPreferences
-           // prefs.remove("isLoggedIn");
-           prefs.setBool("isLoggedIn", true);
+          // prefs.remove("isLoggedIn");
+          prefs.setBool("isLoggedIn", true);
             prefs.remove("access_token");
           //  prefs.remove("token_type"); ?? obsolete ??
           }          
@@ -104,8 +96,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
         ),
       ),
       body: Center( 
-        child: 
-          Padding(
+        child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
@@ -241,9 +232,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 ],
               ),
             ),
-          ),
+        ),
       ),
     );
   }
   Widget _gap() => const SizedBox(height: 16);
 }
+
+

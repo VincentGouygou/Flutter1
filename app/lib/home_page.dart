@@ -59,8 +59,7 @@ class _HomePageState extends State<HomePage> {
     log(response.statusCode.toString());
     
   
-      log("kkkkkkkkkkk" +response.body);
-
+       
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(
         context,
