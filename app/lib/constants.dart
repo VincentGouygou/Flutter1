@@ -3,7 +3,7 @@ String str_enter_email_and_password = "Entrez votre adresse e-mail et votre mot 
 String userLang="en";
 bool devmode = true;
 bool isLoggedIn = false;
-
+String msg = "";
 var translations =  
   { 'fr': {  
       str_welcome                 : 'Bienvenue',

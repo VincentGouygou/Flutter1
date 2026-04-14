@@ -14,11 +14,10 @@ class InscriptionPage extends StatefulWidget {
 }
 
 class _InscriptionPageState extends State<InscriptionPage> {
-  bool _isPasswordVisible = false;
-  // bool _rememberMe = false;
+  bool _isPasswordVisible = false; 
   bool _result = false;
-  String _name = "";
- 
+   
+  String _msg = "";
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -51,33 +50,21 @@ class _InscriptionPageState extends State<InscriptionPage> {
         // ce que le serveur dit
   
       final Map<String, dynamic> data = jsonDecode(response.body);
+       
      
       // si connexion ok, alors on bascule sur une autre page
       if (response.statusCode == 200) {
         setState(() {
           _result = data['result']; // On récupère le champ 'result',
-          _name = data['name'];
+          _msg = data['action'];
           
         });
         if (_result){
           final prefs = await SharedPreferences.getInstance();
           log('result true');
-          // on récupère le token           
-        // var token_type = bodyjson["token_type"]; ?? obsolete ??
-          if (1==1) {
-            // on sauvegarde le token et le type de token dans les SharedPreferences
-          //  prefs.setBool("isLoggedIn", true);
-          //  prefs.setString("access_token", _token);
-          //  prefs.setString("token_type", token_type); ?? obsolete ??
-          } else {
-            // on supprime le token et le type de token des SharedPreferences
-            // prefs.remove("isLoggedIn");
-          //  prefs.setBool("isLoggedIn", true);
-           // prefs.remove("access_token");
-            //  prefs.remove("token_type"); ?? obsolete ??
-          }          
-          await prefs.setString("userName", _name);             
-          Navigator.pushReplacementNamed(context, "/connexion");
+          
+          await prefs.setString("msg", _msg);             
+          Navigator.pushReplacementNamed(context, "/connexion", arguments: data['action'], );
         }        
       }
     } catch (e) {

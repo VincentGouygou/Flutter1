@@ -18,13 +18,18 @@ class _ConnexionPageState extends State<ConnexionPage> {
   bool _result = false;
   String _name = "";
   String _token = "";
+  String? msg;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-
+   /* final prefs = await SharedPreferences.getInstance();
+    
+     
+    msg = prefs.getString('msg')?? str_enter_email_and_password ;
+    str_enter_email_and_password = msg; */
     if (devmode) {
       _emailController.text = "vincent.gouygou@gmx.fr";
       _passwordController.text = "alicia46!";
@@ -94,6 +99,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
   }
   @override
   Widget build(BuildContext context) {
+    final String? messageRecu = ModalRoute.of(context)?.settings.arguments as String?;
     return Scaffold(
       appBar: AppBar(
         title: Center( 
@@ -108,6 +114,9 @@ class _ConnexionPageState extends State<ConnexionPage> {
               key: _formKey,
               child: Column(
                 children: [
+                  if (messageRecu != null) 
+                    Text(messageRecu, style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                  
 
                   Text(str_welcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   Text(str_enter_email_and_password),
