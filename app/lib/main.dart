@@ -1,6 +1,6 @@
  
 import 'package:flutter/material.dart';
-import 'dart:async'; // <--- Permet d'utiliser le Timer
+ // import 'dart:async'; // <--- Permet d'utiliser le Timer
 //import 'package:menu_bar/menu_bar.dart';
 import 'package:app/inscription_page.dart';
 import 'package:app/connexion_page.dart';
@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+/* 
 
 class App1 extends StatefulWidget {
   const App1({super.key, required this.title});
@@ -144,3 +145,8 @@ class _App1State extends State<App1> {
     );
   }
 }
+
+
+
+*/
+ 

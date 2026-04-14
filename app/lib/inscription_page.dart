@@ -194,7 +194,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                         return 'Please enter some text';
                       }
  
-                      return value;
+                      return null;
                     },
                     decoration: const InputDecoration(
                       labelText: 'Name',
@@ -256,7 +256,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
               ),
             ),
           ),
-    ),
+      ),
     );
   }
   Widget _gap() => const SizedBox(height: 16);
