@@ -7,23 +7,18 @@ import 'package:app/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
-
-
-
-
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
-
   @override
   State<InscriptionPage> createState() => _InscriptionPageState();
 }
 
 class _InscriptionPageState extends State<InscriptionPage> { 
-   bool _isPasswordVisible = false;
- // bool _rememberMe = false;
+  bool _isPasswordVisible = false;
+  // bool _rememberMe = false;
   bool _result = false;
   String _name = "";
-   String _token = "";
+  String _token = "";
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -45,19 +40,19 @@ class _InscriptionPageState extends State<InscriptionPage> {
     log(_passwordController.text);
 
     try {
-    //  final client = http.Client();    // ?? obsolete ??
+      //  final client = http.Client();    // ?? obsolete ??
       
-     // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
+      // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
       final url = Uri.https('devince.fr', '/api/user.php'); 
       var response = await http.post( url,
-      headers: {
-          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
-          'Accept': 'application/json',
-        },
-      body: {   'action': 'subscribe',
-                'email': _emailController.text,
-                'pwd': _passwordController.text, 
-                'name': _nameController.text, },
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+            'Accept': 'application/json',
+          },
+        body: {   'action': 'subscribe',
+                  'email': _emailController.text,
+                  'pwd': _passwordController.text, 
+                  'name': _nameController.text, },
       );
       log("kljklj "+ response.statusCode.toString());
       log( "llllllll" +response.body.toString());
@@ -74,9 +69,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
         });
         if (_result){
           final prefs = await SharedPreferences.getInstance();
-          // on récupère le token
-           
-           
+          // on récupère le token           
          // var token_type = bodyjson["token_type"]; ?? obsolete ??
           if (1==1) {
             // on sauvegarde le token et le type de token dans les SharedPreferences
@@ -89,21 +82,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
            prefs.setBool("isLoggedIn", true);
             prefs.remove("access_token");
           //  prefs.remove("token_type"); ?? obsolete ??
-          }
-
-          
-          await prefs.setString("userName", _name);  
-           
+          }          
+          await prefs.setString("userName", _name);             
           Navigator.pushReplacementNamed(context, "/home");
-        }
-        
-        
+        }        
       }
     } catch (e) {
-      // erreur de connexion
-      
-      log( " errorserver : "+ e.toString()   );
-      
+      // erreur de connexion      
+      log( " errorserver : "+ e.toString()   );      
     }
   }
   void goLogin()  {

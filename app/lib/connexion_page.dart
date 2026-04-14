@@ -79,21 +79,14 @@ class _ConnexionPageState extends State<ConnexionPage> {
            prefs.setBool("isLoggedIn", true);
             prefs.remove("access_token");
           //  prefs.remove("token_type"); ?? obsolete ??
-          }
-
-          
-          await prefs.setString("userName", _name);  
-           
+          }          
+          await prefs.setString("userName", _name);             
           Navigator.pushReplacementNamed(context, "/home");
-        }
-        
-        
+        }        
       }
     } catch (e) {
       // erreur de connexion
-      log( " errorserver : $e.toString()");
-       
-      
+      log( " errorserver : $e.toString()");      
     }
   }
   void goSubscribe()  {
@@ -242,7 +235,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
               ),
             ),
           ),
-    ),
+      ),
     );
   }
   Widget _gap() => const SizedBox(height: 16);
