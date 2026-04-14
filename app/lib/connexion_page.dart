@@ -132,7 +132,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                       labelText: 'Email',
                       hintText: 'Enter your email',
                       prefixIcon: Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(),
+                      border:   OutlineInputBorder(),
                     ),
                   ),
                   _gap(),

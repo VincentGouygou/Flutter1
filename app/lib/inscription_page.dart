@@ -43,15 +43,15 @@ class _InscriptionPageState extends State<InscriptionPage> {
       var response = await http.post( url, headers: {
           'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
           'Accept': 'application/json',
-        },body: {   'action': 'subscribe',
+        },body: { 'action': 'subscribe',
                   'email': _emailController.text,
                   'pwd': _passwordController.text, 
                   'name': _nameController.text, }, );
-  
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      // On décode le JSON peu importe le statut pour voir
+        // On décode le JSON peu importe le statut pour voir
         // ce que le serveur dit
   
+      final Map<String, dynamic> data = jsonDecode(response.body);
+     
       // si connexion ok, alors on bascule sur une autre page
       if (response.statusCode == 200) {
         setState(() {
@@ -65,18 +65,18 @@ class _InscriptionPageState extends State<InscriptionPage> {
         // var token_type = bodyjson["token_type"]; ?? obsolete ??
           if (1==1) {
             // on sauvegarde le token et le type de token dans les SharedPreferences
-            prefs.setBool("isLoggedIn", true);
-            prefs.setString("access_token", _token);
+          //  prefs.setBool("isLoggedIn", true);
+          //  prefs.setString("access_token", _token);
           //  prefs.setString("token_type", token_type); ?? obsolete ??
           } else {
             // on supprime le token et le type de token des SharedPreferences
-          // prefs.remove("isLoggedIn");
-          prefs.setBool("isLoggedIn", true);
-            prefs.remove("access_token");
-          //  prefs.remove("token_type"); ?? obsolete ??
+            // prefs.remove("isLoggedIn");
+          //  prefs.setBool("isLoggedIn", true);
+           // prefs.remove("access_token");
+            //  prefs.remove("token_type"); ?? obsolete ??
           }          
           await prefs.setString("userName", _name);             
-          Navigator.pushReplacementNamed(context, "/home");
+          Navigator.pushReplacementNamed(context, "/connexion");
         }        
       }
     } catch (e) {
@@ -105,6 +105,24 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
                   Text(str_welcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   Text(str_enter_email_and_password),
+                  TextFormField(
+                    controller: _nameController,
+                    validator: (value) {
+                      // add name validation
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+ 
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                      hintText: 'Enter your name',
+                      prefixIcon: Icon(Icons.perm_identity_outlined),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                   _gap(),
                   TextFormField(
                     controller: _emailController,
                     validator: (value) {
@@ -143,11 +161,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       return null;
                     },
                     obscureText: !_isPasswordVisible,
-                    decoration: InputDecoration(
+                    decoration:   InputDecoration(
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       prefixIcon: const Icon(Icons.lock_outline_rounded),
-                      border: const OutlineInputBorder(),
+                      border:   OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
@@ -162,24 +180,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       ),
                     ),
                   ),
-                  _gap(),
-                  TextFormField(
-                    controller: _nameController,
-                    validator: (value) {
-                      // add name validation
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
- 
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      hintText: 'Enter your name',
-                      prefixIcon: Icon(Icons.perm_identity_outlined),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                 
+                  
                   _gap(),
                   SizedBox(
                     width: double.infinity,
@@ -206,7 +208,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       },
                     ),
                   ),
-                  // Ajoute tes TextFormField ici pour l'email et le mot de passe
+                  
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
