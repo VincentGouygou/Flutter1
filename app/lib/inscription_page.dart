@@ -18,7 +18,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
   // bool _rememberMe = false;
   bool _result = false;
   String _name = "";
-  String _token = "";
+ 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -57,10 +57,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
         setState(() {
           _result = data['result']; // On récupère le champ 'result',
           _name = data['name'];
-          _token = data['access_token'];
+          
         });
         if (_result){
           final prefs = await SharedPreferences.getInstance();
+          log('result true');
           // on récupère le token           
         // var token_type = bodyjson["token_type"]; ?? obsolete ??
           if (1==1) {
