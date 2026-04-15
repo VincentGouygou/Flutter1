@@ -3,10 +3,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+
+/*
+
 void main() => runApp(const GaleriePage());
  
 
-/*
 class GaleriePage extends StatelessWidget {
   const GaleriePage({super.key});
 
@@ -31,11 +33,9 @@ class _GaleriePageState extends State<GaleriePage> {
   /*  final url = Uri.https('devince.fr', '/api/user.php'); 
 
     var response = await http.post(url, */
-    
-  // Remplacez par l'URL de votre serveur (ex: http://10.0.2.2/api/ pour l'émulateur Android)
-  //final String apiUrl = "http://votre-site.com/get_images.php";
+     
   void goHome() {
-    //Navigator.pushReplacementNamed(context, "/home");
+   // Navigator.pop(context, "/home");
   }
   Future<List<dynamic>> fetchImages() async {
     final url = Uri.https('devince.fr', '/api/get_images.php'); 
