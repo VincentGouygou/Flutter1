@@ -38,13 +38,13 @@ class _GaleriePageState extends State<GaleriePage> {
    // Navigator.pop(context, "/home");
   }
   Future<List<dynamic>> fetchImages() async {
-    final url = Uri.https('devince.fr', '/api/get_images.php'); 
+    final String apiUrl = 'https://devince.fr/api/get_images.php'; 
 
-    var response = await http.post(url, 
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
-        'Accept': 'application/json',
-      },
+    var response = await http.get(Uri.parse(apiUrl)
+     // headers: {
+      //  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+     //   'Accept': 'application/json',
+     // },
      // body: {  'Authorization': token,
       //         'action': "logOut",},  
     );  //
