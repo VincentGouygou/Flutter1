@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 void main() => runApp(const GaleriePage());
  
 
-
+/*
 class GaleriePage extends StatelessWidget {
   const GaleriePage({super.key});
 
@@ -19,15 +19,15 @@ class GaleriePage extends StatelessWidget {
     );
   }
 }
-
-class GalleryScreen extends StatefulWidget {
-  const GalleryScreen({super.key});
+*/
+class GaleriePage extends StatefulWidget {
+  const GaleriePage({super.key});
  
   @override
-  State<GalleryScreen> createState() => _GalleryScreenState();
+  State<GaleriePage> createState() => _GaleriePageState();
 }
 
-class _GalleryScreenState extends State<GalleryScreen> {
+class _GaleriePageState extends State<GaleriePage> {
   /*  final url = Uri.https('devince.fr', '/api/user.php'); 
 
     var response = await http.post(url, */
