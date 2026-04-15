@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -77,8 +78,10 @@ class _HomePageState extends State<HomePage> {
       ).showSnackBar(  
         SnackBar(content: Text('Erreur de déconnexion    '  )));
     }
+  } // void logout
+  void goGallery() {
+    Navigator.pushReplacementNamed(context, "/galerie");
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +94,11 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text(strWelcome),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: goGallery,
+              child: const Text('Voir le dossier Photos'),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _logout,
