@@ -10,9 +10,9 @@ import 'dart:developer';
 class ConnexionPage extends StatefulWidget {
   const ConnexionPage({super.key});
   @override
-  State<ConnexionPage> createState() => _ConnexionPageState();
+  State<ConnexionPage> createState() => ConnexionPageState();
 }
-class _ConnexionPageState extends State<ConnexionPage> {
+class ConnexionPageState extends State<ConnexionPage> {
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
   bool _result = false;
@@ -35,7 +35,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
       _passwordController.text = "alicia46!";
     }
   }
-  void validateForm() async {
+  void _validateForm() async {
     // récupère les valeurs des champs de texte
     log(_emailController.text);
     log(_passwordController.text);
@@ -212,7 +212,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          validateForm();
+                          _validateForm();
                         }
                       },
                     ),

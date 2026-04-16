@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
       _displayName = prefs.getString("userName") ?? "Utilisateur";
     });
   }
-  void _logout() async {
+  void logout() async {
     log("logout");
     // Effacer les données de connexion
     final prefs = await SharedPreferences.getInstance();
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _logout,
+              onPressed: logout,
               child: const Text('Déconnexion'),
             ),
           ],

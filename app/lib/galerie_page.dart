@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-
+import 'dart:developer';
 /*
 
 void main() => runApp(const GaleriePage());
@@ -53,6 +53,8 @@ class _GaleriePageState extends State<GaleriePage> {
 
    // final response = await http.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
+      log('htttp 200');
+      log('body '+response.body);
       return json.decode(response.body);
     } else {
       throw Exception('Erreur de chargement');
@@ -102,42 +104,43 @@ Future<void> _uploadImage() async {
               child: const Text('retour Home'),
             ),
             const SizedBox(height: 20),
-            FutureBuilder<List<dynamic>>(
-              future: fetchImages(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Erreur: ${snapshot.error}"));
-                } else {
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(10),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // 2 colonnes
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          snapshot.data![index]['url'],
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-
+            Expanded(
+              child: FutureBuilder<List<dynamic>>(
+                future: fetchImages(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Erreur: ${snapshot.error}"));
+                  } else {
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(10),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // 2 colonnes
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            snapshot.data![index]['url'],
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
             ElevatedButton(
               onPressed: _uploadImage,
               child: const Text('Ajouter une photo'),
                      
             ),
-          /*  floatingActionButton: FloatingActionButton(
+            /*  floatingActionButton: FloatingActionButton(
               onPressed: _uploadImage,
               child: const Icon(Icons.add_a_photo),
             ), */

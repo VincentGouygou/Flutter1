@@ -10,10 +10,10 @@ import 'dart:developer';
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
   @override
-  State<InscriptionPage> createState() => _InscriptionPageState();
+  State<InscriptionPage> createState() => InscriptionPageState();
 }
 
-class _InscriptionPageState extends State<InscriptionPage> {
+class InscriptionPageState extends State<InscriptionPage> {
   bool _isPasswordVisible = false; 
   bool _result = false;
    
@@ -32,7 +32,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       _nameController.text = 'VincentG';
     }
   }  
-  void validateForm() async {
+  void _validateForm() async {
           
     try {
       //  final client = http.Client();    // ?? obsolete ??
@@ -191,7 +191,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          validateForm();
+                          _validateForm();
                         }
                       },
                     ),
