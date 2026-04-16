@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'dart:developer';
+import 'package:app/detail_screen.dart';
 /*
 
 void main() => runApp(const GaleriePage());
@@ -33,7 +34,12 @@ class _GaleriePageState extends State<GaleriePage> {
   /*  final url = Uri.https('devince.fr', '/api/user.php'); 
 
     var response = await http.post(url, */
-     
+  Future<List<dynamic>>? _imagesFuture;
+  @override 
+  void initState() {
+    super.initState();
+     _imagesFuture = fetchImages();
+  }   
   void goHome() {
     Navigator.pushReplacementNamed(context, "/home");
   }
@@ -63,6 +69,8 @@ class _GaleriePageState extends State<GaleriePage> {
   final ImagePicker _picker = ImagePicker();
 
 Future<void> _uploadImage() async {
+  
+  
   // 1. Choisir l'image
   final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
   
@@ -88,8 +96,10 @@ Future<void> _uploadImage() async {
     log('response ' + response.statusCode.toString() );
     if (response.statusCode == 200) {
       print("Image envoyée !");
-      log(response.toString());
-      setState(() {}); // Rafraîchir la galerie
+      log(response.statusCode.toString());
+      setState(() {
+        _imagesFuture = fetchImages();
+      }); // Rafraîchir la galerie
     } else {
       print("Échec de l'envoi");
     }
@@ -111,7 +121,7 @@ Future<void> _uploadImage() async {
             const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<dynamic>>(
-                future: fetchImages(),
+                future: _imagesFuture = fetchImages(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -127,6 +137,33 @@ Future<void> _uploadImage() async {
                       ),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
+                        final imageItem = snapshot.data![index];
+                        
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailScreen(
+                                  imageUrl: imageItem['url'],
+                                  titre: imageItem['titre'] ?? "Sans titre",
+                                  id: imageItem['id'],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Hero(
+                            tag: imageItem['url'], // La clé doit être identique à celle du DetailScreen
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.network(
+                                imageItem['url'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                            /*
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: Image.network(
@@ -134,6 +171,7 @@ Future<void> _uploadImage() async {
                             fit: BoxFit.cover,
                           ),
                         );
+                      */
                       },
                     );
                   }
