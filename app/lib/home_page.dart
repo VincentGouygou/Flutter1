@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     // Effacer les données de connexion
     final prefs = await SharedPreferences.getInstance();
     isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
-    String token = prefs.getString("access_token") ?? "";
+    String token = prefs.getString("access_token") ?? "1";
     
    // String token_type = prefs.getString("token_type") ?? ""; ?? obsolete ??
 

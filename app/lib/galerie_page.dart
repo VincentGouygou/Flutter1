@@ -35,7 +35,7 @@ class _GaleriePageState extends State<GaleriePage> {
     var response = await http.post(url, */
      
   void goHome() {
-   // Navigator.pop(context, "/home");
+    Navigator.pushReplacementNamed(context, "/home");
   }
   Future<List<dynamic>> fetchImages() async {
     final String apiUrl = 'https://devince.fr/api/get_images.php'; 
@@ -68,22 +68,27 @@ Future<void> _uploadImage() async {
   
   if (pickedFile != null) {
     File imageFile = File(pickedFile.path);
-    
+    log('choisie');
     // 2. Préparer la requête Multipart
     var request = http.MultipartRequest(
       'POST', 
-      Uri.parse("https://devince.fr/upload_image.php")
+      Uri.parse("https://devince.fr/api/upload_image.php")
     );
-    
+    request.headers.addAll({
+      "Content-Type": "multipart/form-data",
+    });
+    log('prepare  1 req');
     request.files.add(
       await http.MultipartFile.fromPath('image', imageFile.path)
     );
-
+    log('prepare  2 req');
     // 3. Envoyer
     var response = await request.send();
-
+    log('send    req');
+    log('response ' + response.statusCode.toString() );
     if (response.statusCode == 200) {
       print("Image envoyée !");
+      log(response.toString());
       setState(() {}); // Rafraîchir la galerie
     } else {
       print("Échec de l'envoi");
