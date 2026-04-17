@@ -34,7 +34,13 @@ class _GaleriePageState extends State<GaleriePage> {
   /*  final url = Uri.https('devince.fr', '/api/user.php'); 
 
     var response = await http.post(url, */
-     
+  Future<List<dynamic>>? _images;
+  @override
+  void initState() {
+    super.initState();
+    // POINT 2 : Initialiser le futur au lancement
+    _images = fetchImages();
+  }
   void goHome() {
     Navigator.pushReplacementNamed(context, "/home");
   }
@@ -90,7 +96,9 @@ Future<void> _uploadImage() async {
     if (response.statusCode == 200) {
       print("Image envoyée !");
       log(response.statusCode.toString());
-      setState(() {}); // Rafraîchir la galerie
+      setState(() {
+        _images = fetchImages();
+      }); // Rafraîchir la galerie
     } else {
       print("Échec de l'envoi");
     }
@@ -112,7 +120,7 @@ Future<void> _uploadImage() async {
             const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<dynamic>>(
-                future: fetchImages(),
+                future: _images,//       fetchImages(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -131,8 +139,8 @@ Future<void> _uploadImage() async {
                         final imageItem = snapshot.data![index];
                         
                         return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            final result = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailScreen(
@@ -142,6 +150,12 @@ Future<void> _uploadImage() async {
                                 ),
                               ),
                             );
+                            // Si result est true, cela veut dire qu'on a supprimé l'image
+                            if (result == true) {
+                              setState(() { 
+                                _images = fetchImages();
+                              });
+                            }
                           },
                           child: Hero(
                             tag: imageItem['url'], // La clé doit être identique à celle du DetailScreen
