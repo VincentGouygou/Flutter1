@@ -6,8 +6,7 @@ import 'package:app/inscription_page.dart';
 import 'package:app/connexion_page.dart';
 import 'package:app/home_page.dart';
 import 'package:app/constants.dart';
-import 'package:app/galerie_page.dart';
-import 'package:app/detail_screen.dart';
+import 'package:app/galerie_page.dart'; 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 void main() async {
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
         "/home": (context) => const HomePage(),
         "/connexion": (context) => const ConnexionPage(),
         "/inscription": (context) => const InscriptionPage(),
-        "/galerie": (context) => const GaleriePage(),
+        "/galerie": (context) => const GaleriePage(), 
       },
     );
   }

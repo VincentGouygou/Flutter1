@@ -34,12 +34,7 @@ class _GaleriePageState extends State<GaleriePage> {
   /*  final url = Uri.https('devince.fr', '/api/user.php'); 
 
     var response = await http.post(url, */
-  Future<List<dynamic>>? _imagesFuture;
-  @override 
-  void initState() {
-    super.initState();
-     _imagesFuture = fetchImages();
-  }   
+     
   void goHome() {
     Navigator.pushReplacementNamed(context, "/home");
   }
@@ -69,8 +64,6 @@ class _GaleriePageState extends State<GaleriePage> {
   final ImagePicker _picker = ImagePicker();
 
 Future<void> _uploadImage() async {
-  
-  
   // 1. Choisir l'image
   final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
   
@@ -97,9 +90,7 @@ Future<void> _uploadImage() async {
     if (response.statusCode == 200) {
       print("Image envoyée !");
       log(response.statusCode.toString());
-      setState(() {
-        _imagesFuture = fetchImages();
-      }); // Rafraîchir la galerie
+      setState(() {}); // Rafraîchir la galerie
     } else {
       print("Échec de l'envoi");
     }
@@ -121,7 +112,7 @@ Future<void> _uploadImage() async {
             const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<dynamic>>(
-                future: _imagesFuture = fetchImages(),
+                future: fetchImages(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

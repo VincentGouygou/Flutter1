@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+ 
 class DetailScreen extends StatelessWidget {
   final String imageUrl;
   final String titre;
