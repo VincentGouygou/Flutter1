@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     log("logout");
     // Effacer les données de connexion
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
     isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
     String token = prefs.getString("access_token") ?? "1";
     
@@ -60,7 +61,7 @@ class _HomePageState extends State<HomePage> {
     log(response.statusCode.toString());
     
   
-       
+    if (!mounted) return;   
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(
         context,
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> {
       await prefs.setBool("isLoggedIn", false);
      // await prefs.remove("token_type"); ?? obsolete ??
       await prefs.remove("access_token");
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, "/connexion");
     } 
     if (response.statusCode == 404) {

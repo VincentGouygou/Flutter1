@@ -62,14 +62,15 @@ class InscriptionPageState extends State<InscriptionPage> {
         if (_result){
           final prefs = await SharedPreferences.getInstance();
           log('result true');
-          
+          if (!mounted) return;
+          final navigator = Navigator.of(context); // enreg le context avant l'await
           await prefs.setString("msg", _msg);             
-          Navigator.pushReplacementNamed(context, "/connexion", arguments: data['action'], );
+          navigator.pushReplacementNamed( "/connexion", arguments: data['action'], );
         }        
       }
     } catch (e) {
       // erreur de connexion      
-      log( " errorserver : "+ e.toString()   );      
+      log( " errorserver : $e"   );      
     }
   }
   void goLogin()  {
@@ -91,8 +92,8 @@ class InscriptionPageState extends State<InscriptionPage> {
               child: Column(
                 children: [
 
-                  Text(str_welcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text(str_enter_email_and_password),
+                  Text(strWelcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text(strEnterEmailAndPassword),
                   TextFormField(
                     controller: _nameController,
                     validator: (value) {

@@ -16,6 +16,8 @@ class DetailScreen extends StatelessWidget {
 
     if (response.statusCode == 200) {
       // On ferme la page de détails et on retourne à la galerie
+      // On vérifie que l'écran est toujours affiché avant d'agir sur l'UI
+    if (!context.mounted) return;
       Navigator.pop(context, true); 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Image supprimée")),

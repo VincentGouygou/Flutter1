@@ -54,8 +54,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                 'email': _emailController.text,
                 'pwd': _passwordController.text,},  
       );
-      log("kljklj "+ response.statusCode.toString());
-      log( "llllllll" +response.body.toString());
+       
       final Map<String, dynamic> data = jsonDecode(response.body);
       // On décode le JSON peu importe le statut pour voir
         // ce que le serveur dit
@@ -84,9 +83,12 @@ class ConnexionPageState extends State<ConnexionPage> {
            prefs.setBool("isLoggedIn", true);
             prefs.remove("access_token");
           //  prefs.remove("token_type"); ?? obsolete ??
-          }          
-          await prefs.setString("userName", _name);             
-          Navigator.pushReplacementNamed(context, "/home");
+          }         
+          if (!mounted) return;
+          final navigator = Navigator.of(context); // enreg le context avant l'await
+          await prefs.setString("userName", _name);   
+          navigator.pushReplacementNamed( "/home");          
+          // Navigator.pushReplacementNamed(context, "/home");
         }        
       }
     } catch (e) {
@@ -118,8 +120,8 @@ class ConnexionPageState extends State<ConnexionPage> {
                     Text(messageRecu, style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
                   
 
-                  Text(str_welcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text(str_enter_email_and_password),
+                  Text(strWelcome, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text(strEnterEmailAndPassword),
                   TextFormField(
                     controller: _emailController,
                     validator: (value) {

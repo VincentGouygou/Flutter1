@@ -59,9 +59,7 @@ class _GaleriePageState extends State<GaleriePage> {
 
 
    // final response = await http.get(Uri.parse(apiUrl));
-    if (response.statusCode == 200) {
-      log('htttp 200');
-      log('body '+response.body);
+    if (response.statusCode == 200) { 
       return json.decode(response.body);
     } else {
       throw Exception('Erreur de chargement');
@@ -92,15 +90,15 @@ Future<void> _uploadImage() async {
     // 3. Envoyer
     var response = await request.send();
     log('send    req');
-    log('response ' + response.statusCode.toString() );
+    log('response ${response.statusCode}' );
     if (response.statusCode == 200) {
-      print("Image envoyée !");
+      log("Image envoyée !");
       log(response.statusCode.toString());
       setState(() {
         _images = fetchImages();
       }); // Rafraîchir la galerie
     } else {
-      print("Échec de l'envoi");
+      log("Échec de l'envoi");
     }
   }
 }
