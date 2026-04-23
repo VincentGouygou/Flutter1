@@ -100,17 +100,20 @@ class InscriptionPageState extends State<InscriptionPage> {
       body: {   'action': 'checkConf',
                 'email': _emailController.text, },  
       );
-
+      final Map<String, dynamic> data = jsonDecode(response.body);
       if (response.statusCode== 200) {
         final prefs = await SharedPreferences.getInstance(); 
-          final Map<String, dynamic> data = jsonDecode(response.body);
-          if (!mounted) return;
-          final navigator = Navigator.of(context); // enreg le context avant l'await
-          await prefs.setString("msg", _msg); 
-                      
-          navigator.pushReplacementNamed( "/connexion", arguments: data['action'], );
-      } else {
         
+        if (!mounted) return;
+        final navigator = Navigator.of(context); // enreg le context avant l'await
+        await prefs.setString("msg", _msg);                     
+        navigator.pushReplacementNamed( "/connexion", arguments: data['action'], );
+      } else {
+        String erreur= data['error'];
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(erreur)),
+        );
       }
     } catch (e) {
       // erreur de connexion
