@@ -59,8 +59,8 @@ class _HomePageState extends State<HomePage> {
     );  //
 
     log(response.statusCode.toString());
-    
-  
+    //final Map<String, dynamic> data = jsonDecode(response.body);
+   // log('body: ' +response.body);
     if (!mounted) return;   
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(

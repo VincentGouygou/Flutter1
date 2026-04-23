@@ -16,16 +16,17 @@ class InscriptionPage extends StatefulWidget {
 class InscriptionPageState extends State<InscriptionPage> {
   bool _isPasswordVisible = false; 
   bool _result = false;
-   
+  bool _confBool = false;
   String _msg = "";
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+   
   @override
   void initState() {
     super.initState();
-
+    _confBool = false;
     if (devmode) {
       _emailController.text = "vincent.gouygou@gmx.fr";
       _passwordController.text = "alicia46!";
@@ -55,17 +56,26 @@ class InscriptionPageState extends State<InscriptionPage> {
       // si connexion ok, alors on bascule sur une autre page
       if (response.statusCode == 200) {
         setState(() {
-          _result = data['result']; // On récupère le champ 'result',
+          _result = data['result']; // On récupère le champ 'result' et 'msg',
           _msg = data['action'];
           
         });
         if (_result){
-          final prefs = await SharedPreferences.getInstance();
-          log('result true');
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Veuillez confirmer votre inscription par l'email qui vous a été envoyé et revenez ici pour le signaler et vous connecter.")),
+          );
+          setState(() {
+            _confBool=true;
+          });
+          /*
+          final prefs = await SharedPreferences.getInstance(); 
           if (!mounted) return;
           final navigator = Navigator.of(context); // enreg le context avant l'await
-          await prefs.setString("msg", _msg);             
+          await prefs.setString("msg", _msg); 
+                      
           navigator.pushReplacementNamed( "/connexion", arguments: data['action'], );
+          */
         }        
       }
     } catch (e) {
@@ -75,6 +85,37 @@ class InscriptionPageState extends State<InscriptionPage> {
   }
   void goLogin()  {
     Navigator.pushReplacementNamed(context, "/connexion");
+  }
+  void checkConf() async {
+    try {
+      //  final client = http.Client();    // ?? obsolete ??
+      
+      // Uri url = Uri.parse("https://devince.fr/api/user.php?email=$_emailController.text&pwd=$_passwordController.text");
+      final url = Uri.https('devince.fr', '/api/user.php'); 
+      var response = await http.post( url,
+      headers: {
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',
+          'Accept': 'application/json',
+        },
+      body: {   'action': 'checkConf',
+                'email': _emailController.text, },  
+      );
+
+      if (response.statusCode== 200) {
+        final prefs = await SharedPreferences.getInstance(); 
+          final Map<String, dynamic> data = jsonDecode(response.body);
+          if (!mounted) return;
+          final navigator = Navigator.of(context); // enreg le context avant l'await
+          await prefs.setString("msg", _msg); 
+                      
+          navigator.pushReplacementNamed( "/connexion", arguments: data['action'], );
+      } else {
+        
+      }
+    } catch (e) {
+      // erreur de connexion
+      log( " errorserver : $e.toString()");      
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -169,8 +210,7 @@ class InscriptionPageState extends State<InscriptionPage> {
                       ),
                     ),
                   ),
-                 
-                  
+                
                   _gap(),
                   SizedBox(
                     width: double.infinity,
@@ -219,6 +259,32 @@ class InscriptionPageState extends State<InscriptionPage> {
                       ),
                       
                     ),
+                  ),
+                  _gap(),
+                  if (_confBool) 
+                  SizedBox(
+                    
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        onPressed: checkConf,
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            "Confirmer l'inscription",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        
+                      ),
+                    
                   ),
                 ],
               ),
